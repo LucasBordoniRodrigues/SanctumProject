@@ -26,22 +26,30 @@ class OAuthClientSpy extends OAuthClient
 	 *
 	 * @return mixed
 	 */
-	public function authenticate(string $email, string $secret) {
+	public function authenticate(string $email, string $secret): array {
+        return [];
     }
 }
 
 class OAuthAuthenticationTest extends TestCase
 {
     private MockObject|OAuthClientSpy $oAuthClientSpy;
+    private string $name;
     private string $email;
     private string $secret;
+    private string $token;
+    private AuthenticationParams $params;
     private OAuthAuthentication $sut;
 
     protected function setUp(): void
     {
         $this->oAuthClientSpy = $this->createMock(OAuthClientSpy::class);
+        $this->name = $this->faker->name();
         $this->email = $this->faker->email();
         $this->secret = $this->faker->password();
+        $this->token = "123MilhasToken";
+        $this->params = new AuthenticationParams(email: $this->email, secret: $this->secret);
+
         $this->sut = new OAuthAuthentication(oAuthClient: $this->oAuthClientSpy);
     }
 
@@ -52,11 +60,12 @@ class OAuthAuthenticationTest extends TestCase
      */
     public function test_should_call_oauthclient_with_correct_credentials()
     {
-        $params = new AuthenticationParams(email: $this->email, secret: $this->secret);
-        $this->oAuthClientSpy->expects($this->once())
-        ->method('authenticate');
         
-        $this->sut->auth($params);
+        $this->oAuthClientSpy->expects($this->once())
+        ->method('authenticate')
+        ->will($this->returnValue(["name" => $this->name, "token" => $this->token]));
+        
+        $this->sut->auth($this->params);
     }
 
     /**
@@ -66,12 +75,11 @@ class OAuthAuthenticationTest extends TestCase
      */
     public function test_should_throw_bad_request_if_o_auth_error_returns_invalid_data()
     {
-        $params = new AuthenticationParams(email: $this->email, secret: $this->secret);
         $this->oAuthClientSpy->expects($this->once())
         ->method('authenticate')
         ->will($this->throwException(new OAuthError(OAuthErrorCase::InvalidData)));
 
-        $this->assertEquals($this->sut->auth($params), new DomainError(DomainErrorCase::BadRequest));
+        $this->assertEquals($this->sut->auth($this->params), new DomainError(DomainErrorCase::BadRequest));
     }
 
     /**
@@ -81,12 +89,11 @@ class OAuthAuthenticationTest extends TestCase
      */
     public function test_should_throw_internal_error_if_o_auth_error_returns_unexpected_exception()
     {
-        $params = new AuthenticationParams(email: $this->email, secret: $this->secret);
         $this->oAuthClientSpy->expects($this->once())
         ->method('authenticate')
         ->will($this->throwException(new Exception()));
 
-        $this->assertEquals($this->sut->auth($params), new DomainError(DomainErrorCase::Unexpected));
+        $this->assertEquals($this->sut->auth($this->params), new DomainError(DomainErrorCase::Unexpected));
     }
 
     /**
@@ -96,12 +103,27 @@ class OAuthAuthenticationTest extends TestCase
      */
     public function test_should_throw_unauthorized_if_o_auth_error_returns_invalid_credentials()
     {
-        $params = new AuthenticationParams(email: $this->email, secret: $this->secret);
         $this->oAuthClientSpy->expects($this->once())
         ->method('authenticate')
         ->will($this->throwException(new OAuthError(OAuthErrorCase::InvalidCredentials)));
 
-        $this->assertEquals($this->sut->auth($params), new DomainError(DomainErrorCase::Unauthorized));
+        $this->assertEquals($this->sut->auth($this->params), new DomainError(DomainErrorCase::Unauthorized));
+    }
+
+    /**
+     * Should return AccountEntity if OAuth login success.
+     * 
+     * @return void
+     */
+    public function test_should_return_account_entity_if_o_auth_login_success()
+    {
+        $this->oAuthClientSpy->expects($this->once())
+        ->method('authenticate')
+        ->will($this->returnValue(["name" => $this->name, "token" => $this->token]));
+
+        $account = $this->sut->auth($this->params);
+        $this->assertEquals($account->token, $this->token);
+
     }
 
     
