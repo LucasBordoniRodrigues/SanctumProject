@@ -6,6 +6,7 @@ use Throwable;
 
 use App\Lib\Data\OAuth\OAuthClient;
 use App\Lib\Data\OAuth\OAuthError;
+use App\Lib\Data\Models\OAuthAccountModel;
 
 use App\Lib\Domain\Usecases\Authentication\AuthenticationParams;
 use App\Lib\Domain\Entities\AccountEntity;
@@ -25,7 +26,7 @@ class OAuthAuthentication
     {
         try {
             $auth = $this->oAuthClient->authenticate($params->email, $params->secret);
-            return new AccountEntity(name: $auth['name'], token: $auth['token']);
+            return (new OAuthAccountModel(name: $auth['name'], token: $auth['token']))->toEntity();
         } catch (OAuthError $exception) {
             if ($exception->getCode() == 400){
                 return new DomainError(DomainErrorCase::BadRequest);
