@@ -30,6 +30,10 @@ class OAuthAuthentication
                 return new DomainError(DomainErrorCase::BadRequest);
             }
 
+            if ($exception->getCode() == 401){
+                return new DomainError(DomainErrorCase::Unauthorized);
+            }
+
             return new DomainError(DomainErrorCase::Unexpected);
         } catch(Throwable $exception) {
 

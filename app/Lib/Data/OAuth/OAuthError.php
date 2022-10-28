@@ -6,7 +6,8 @@ use Exception;
 
 enum OAuthErrorCase 
 {
-    case invalidData;
+    case InvalidData;
+    case InvalidCredentials;
 }
 
 class OAuthError extends Exception 
@@ -14,7 +15,8 @@ class OAuthError extends Exception
     function __construct(private OAuthErrorCase $case) 
     {
         match($case){
-            OAuthErrorCase::invalidData      =>    parent::__construct("Invalid Data", 400),
+            OAuthErrorCase::InvalidData        => parent::__construct("Invalid Data", 400),
+            OAuthErrorCase::InvalidCredentials => parent::__construct("Invalid Credentials", 401),
         };
     }
 }

@@ -69,7 +69,7 @@ class OAuthAuthenticationTest extends TestCase
         $params = new AuthenticationParams(email: $this->email, secret: $this->secret);
         $this->oAuthClientSpy->expects($this->once())
         ->method('authenticate')
-        ->will($this->throwException(new OAuthError(OAuthErrorCase::invalidData)));
+        ->will($this->throwException(new OAuthError(OAuthErrorCase::InvalidData)));
 
         $this->assertEquals($this->sut->auth($params), new DomainError(DomainErrorCase::BadRequest));
     }
@@ -87,6 +87,21 @@ class OAuthAuthenticationTest extends TestCase
         ->will($this->throwException(new Exception()));
 
         $this->assertEquals($this->sut->auth($params), new DomainError(DomainErrorCase::Unexpected));
+    }
+
+    /**
+     * Should throw Unauthorized if OAuthError returns Invalid Credentials.
+     * 
+     * @return void
+     */
+    public function test_should_throw_unauthorized_if_o_auth_error_returns_invalid_credentials()
+    {
+        $params = new AuthenticationParams(email: $this->email, secret: $this->secret);
+        $this->oAuthClientSpy->expects($this->once())
+        ->method('authenticate')
+        ->will($this->throwException(new OAuthError(OAuthErrorCase::InvalidCredentials)));
+
+        $this->assertEquals($this->sut->auth($params), new DomainError(DomainErrorCase::Unauthorized));
     }
 
     
