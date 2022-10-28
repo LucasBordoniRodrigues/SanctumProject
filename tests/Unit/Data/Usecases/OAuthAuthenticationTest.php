@@ -4,31 +4,13 @@ namespace Tests\Unit\Data\Usecases;
 
 use Mockery;
 use Mockery\MockInterface;
-use Phockito;
 use Tests\TestCase;
 
-class OAuthAuthentication 
-{
-    private OAuthClient $oAuthClient;
-    private string $email;
-    private string $secret;
+use App\Lib\Data\Authenticator\OAuthClient;
+use App\Lib\Data\Usecases\OAuthAuthentication;
 
-    public function __construct(OAuthClient $oAuthClient, string $email, string $secret)
-    {
-        $this->oAuthClient = $oAuthClient;
-        $this->email = $email;
-        $this->secret = $secret;
-    }
+use App\Lib\Domain\Usecases\Authentication\{AuthenticationParams};
 
-    public function auth() {
-        return $this->oAuthClient->authenticate($this->email, $this->secret);
-    }
-}
-
-abstract class OAuthClient 
-{
-    abstract public function authenticate(string $email, string $secret);
-}
 
 class OAuthClientSpy extends OAuthClient
 {	
@@ -55,8 +37,8 @@ class OAuthAuthenticationTest extends TestCase
     {
         $this->oAuthClientSpy = Mockery::spy(OAuthClientSpy::class);
         $this->email = $this->faker->email();
-        $this->secret = $this->faker->secret();
-        $this->sut = new OAuthAuthentication(oAuthClient: $this->oAuthClientSpy, email: $this->email, secret: $this->secret);
+        $this->secret = $this->faker->password();
+        $this->sut = new OAuthAuthentication(oAuthClient: $this->oAuthClientSpy);
     }
 
     /**
@@ -66,7 +48,8 @@ class OAuthAuthenticationTest extends TestCase
      */
     public function test_should_call_oauthclient_with_correct_credentials()
     {
-        $this->sut->auth();
+        $params = new AuthenticationParams(email: $this->email, secret: $this->secret);
+        $this->sut->auth($params);
     
         $this->assertNotEmpty($this->oAuthClientSpy->shouldHaveReceived('authenticate')->with($this->email, $this->secret)->once());
     }
