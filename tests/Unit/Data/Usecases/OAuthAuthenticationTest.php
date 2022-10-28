@@ -2,19 +2,20 @@
 
 namespace Tests\Unit\Data\Usecases;
 
-use Mockery;
-use Mockery\MockInterface;
 use Tests\TestCase;
+use Exception;
+use PHPUnit\Framework\MockObject\MockObject;
 
 use App\Lib\Data\OAuth\OAuthClient;
 use App\Lib\Data\OAuth\OAuthError;
 use App\Lib\Data\OAuth\OAuthErrorCase;
 use App\Lib\Data\Usecases\OAuthAuthentication;
+
 use App\Lib\Domain\Helpers\DomainError;
 use App\Lib\Domain\Helpers\DomainErrorCase;
 use App\Lib\Domain\Usecases\Authentication\{AuthenticationParams};
-use Exception;
-use PHPUnit\Framework\MockObject\MockObject;
+
+
 
 class OAuthClientSpy extends OAuthClient
 {	
@@ -34,12 +35,14 @@ class OAuthClientSpy extends OAuthClient
 class OAuthAuthenticationTest extends TestCase
 {
     private MockObject|OAuthClientSpy $oAuthClientSpy;
+    private AuthenticationParams $params;
+    private OAuthAuthentication $sut;
     private string $name;
     private string $email;
     private string $secret;
     private string $token;
-    private AuthenticationParams $params;
-    private OAuthAuthentication $sut;
+    private array $mockValidData;
+
 
     protected function setUp(): void
     {
@@ -49,9 +52,28 @@ class OAuthAuthenticationTest extends TestCase
         $this->secret = $this->faker->password();
         $this->token = "123MilhasToken";
         $this->params = new AuthenticationParams(email: $this->email, secret: $this->secret);
-
         $this->sut = new OAuthAuthentication(oAuthClient: $this->oAuthClientSpy);
+        $this->mockValidData = ["name" => $this->name, "token" => $this->token];
     }
+
+    private function mockAuthenticationCall()
+    {
+        return $this->oAuthClientSpy->expects($this->once())
+        ->method('authenticate');
+    }
+
+    private function successCase()
+    {
+        $this->mockAuthenticationCall()
+        ->will($this->returnValue($this->mockValidData));
+    }
+
+    private function errorCase(Exception $error)
+    {
+        $this->mockAuthenticationCall()
+        ->will($this->throwException($error));
+    }
+
 
     /**
      * Should call OAuthClient with correct credentials format.
@@ -60,11 +82,8 @@ class OAuthAuthenticationTest extends TestCase
      */
     public function test_should_call_oauthclient_with_correct_credentials()
     {
-        
-        $this->oAuthClientSpy->expects($this->once())
-        ->method('authenticate')
-        ->will($this->returnValue(["name" => $this->name, "token" => $this->token]));
-        
+        $this->successCase();
+
         $this->sut->auth($this->params);
     }
 
@@ -75,10 +94,8 @@ class OAuthAuthenticationTest extends TestCase
      */
     public function test_should_throw_bad_request_if_o_auth_error_returns_invalid_data()
     {
-        $this->oAuthClientSpy->expects($this->once())
-        ->method('authenticate')
-        ->will($this->throwException(new OAuthError(OAuthErrorCase::InvalidData)));
-
+        $this->errorCase(new OAuthError(OAuthErrorCase::InvalidData));
+        
         $this->assertEquals($this->sut->auth($this->params), new DomainError(DomainErrorCase::BadRequest));
     }
 
@@ -89,9 +106,7 @@ class OAuthAuthenticationTest extends TestCase
      */
     public function test_should_throw_internal_error_if_o_auth_error_returns_unexpected_exception()
     {
-        $this->oAuthClientSpy->expects($this->once())
-        ->method('authenticate')
-        ->will($this->throwException(new Exception()));
+        $this->errorCase(new Exception());
 
         $this->assertEquals($this->sut->auth($this->params), new DomainError(DomainErrorCase::Unexpected));
     }
@@ -103,9 +118,7 @@ class OAuthAuthenticationTest extends TestCase
      */
     public function test_should_throw_unauthorized_if_o_auth_error_returns_invalid_credentials()
     {
-        $this->oAuthClientSpy->expects($this->once())
-        ->method('authenticate')
-        ->will($this->throwException(new OAuthError(OAuthErrorCase::InvalidCredentials)));
+        $this->errorCase(new OAuthError(OAuthErrorCase::InvalidCredentials));
 
         $this->assertEquals($this->sut->auth($this->params), new DomainError(DomainErrorCase::Unauthorized));
     }
@@ -117,9 +130,7 @@ class OAuthAuthenticationTest extends TestCase
      */
     public function test_should_return_account_entity_if_o_auth_login_success()
     {
-        $this->oAuthClientSpy->expects($this->once())
-        ->method('authenticate')
-        ->will($this->returnValue(["name" => $this->name, "token" => $this->token]));
+        $this->successCase();
 
         $account = $this->sut->auth($this->params);
         $this->assertEquals($account->token, $this->token);

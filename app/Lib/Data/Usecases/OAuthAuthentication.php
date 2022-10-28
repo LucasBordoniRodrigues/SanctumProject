@@ -2,6 +2,7 @@
 
 namespace App\Lib\Data\Usecases;
 
+use App\Lib\Domain\Usecases\Authentication\Authentication;
 use Throwable;
 
 use App\Lib\Data\OAuth\OAuthClient;
@@ -13,7 +14,7 @@ use App\Lib\Domain\Entities\AccountEntity;
 use App\Lib\Domain\Helpers\DomainError;
 use App\Lib\Domain\Helpers\DomainErrorCase;
 
-class OAuthAuthentication 
+class OAuthAuthentication implements Authentication
 {
     private OAuthClient $oAuthClient;
 
