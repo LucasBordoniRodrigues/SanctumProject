@@ -11,23 +11,23 @@ class OAuthAuthentication
 {
     private OAuthClient $oAuthClient;
     private string $email;
-    private string $password;
+    private string $secret;
 
-    public function __construct(OAuthClient $oAuthClient, string $email, string $password)
+    public function __construct(OAuthClient $oAuthClient, string $email, string $secret)
     {
         $this->oAuthClient = $oAuthClient;
         $this->email = $email;
-        $this->password = $password;
+        $this->secret = $secret;
     }
 
     public function auth() {
-        return $this->oAuthClient->authenticate($this->email, $this->password);
+        return $this->oAuthClient->authenticate($this->email, $this->secret);
     }
 }
 
 abstract class OAuthClient 
 {
-    abstract public function authenticate(string $email, string $password);
+    abstract public function authenticate(string $email, string $secret);
 }
 
 class OAuthClientSpy extends OAuthClient
@@ -36,11 +36,11 @@ class OAuthClientSpy extends OAuthClient
 	 * Authenticate client
      * 
 	 * @param string $email
-	 * @param string $password
+	 * @param string $secret
 	 *
 	 * @return mixed
 	 */
-	public function authenticate(string $email, string $password) {
+	public function authenticate(string $email, string $secret) {
     }
 }
 
@@ -48,15 +48,15 @@ class OAuthAuthenticationTest extends TestCase
 {
     private MockInterface|OAuthClientSpy $oAuthClientSpy;
     private string $email;
-    private string $password;
+    private string $secret;
     private OAuthAuthentication $sut;
 
     protected function setUp(): void
     {
         $this->oAuthClientSpy = Mockery::spy(OAuthClientSpy::class);
         $this->email = $this->faker->email();
-        $this->password = $this->faker->password();
-        $this->sut = new OAuthAuthentication(oAuthClient: $this->oAuthClientSpy, email: $this->email, password: $this->password);
+        $this->secret = $this->faker->secret();
+        $this->sut = new OAuthAuthentication(oAuthClient: $this->oAuthClientSpy, email: $this->email, secret: $this->secret);
     }
 
     /**
@@ -68,6 +68,6 @@ class OAuthAuthenticationTest extends TestCase
     {
         $this->sut->auth();
     
-        $this->assertNotEmpty($this->oAuthClientSpy->shouldHaveReceived('authenticate')->with($this->email, $this->password)->once());
+        $this->assertNotEmpty($this->oAuthClientSpy->shouldHaveReceived('authenticate')->with($this->email, $this->secret)->once());
     }
 }
