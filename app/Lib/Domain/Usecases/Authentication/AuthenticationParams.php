@@ -13,12 +13,5 @@ class AuthenticationParams
         $this->secret = $secret;
     }
 
-    public function toJson(): object {
-        return json_decode('
-            {
-                "email": '.$this->email.',
-                "password": '.$this->secret.',
-            }
-        ');
-    }
+
 }
