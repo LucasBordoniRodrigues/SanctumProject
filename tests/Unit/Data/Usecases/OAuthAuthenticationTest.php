@@ -123,9 +123,19 @@ class OAuthAuthenticationTest extends TestCase
 
         $account = $this->sut->auth($this->params);
         $this->assertEquals($account->token, $this->token);
-
     }
 
-    
-  
+    /**
+     * Should throw InternalError if OAuthError returns Unexpected Exception Because is sended Invalid Data.
+     * 
+     * @return void
+     */
+    public function test_should_throw_internal_error_if_o_auth_error_returns_unexpected_exception_because_is_sended_invalid_data()
+    {
+        $this->oAuthClientSpy->expects($this->once())
+        ->method('authenticate')
+        ->will($this->returnValue(["invalid_name" => $this->name, "invalid_token" => $this->token]));
+
+        $this->assertEquals($this->sut->auth($this->params), new DomainError(DomainErrorCase::Unexpected));
+    }
 }

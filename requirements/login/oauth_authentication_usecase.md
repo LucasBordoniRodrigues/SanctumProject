@@ -10,7 +10,7 @@
 1. [x] Sistema retorna uma mensagem de dados inválidos e status code correspondente
 
 > ## Exceção - Credenciais inválidas
-1. Sistema retorna uma mensagem de credenciais inválidas e status code correspondente
+1. [x] Sistema retorna uma mensagem de credenciais inválidas e status code correspondente
 
 > ## Exceção - Inesperada
 1. [x] Sistema retorna uma mensagem de erro interno e status code correspondente
