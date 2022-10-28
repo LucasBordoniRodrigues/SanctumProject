@@ -11,6 +11,7 @@ use App\Lib\Data\OAuth\OAuthError;
 use App\Lib\Data\OAuth\OAuthErrorCase;
 use App\Lib\Data\Usecases\OAuthAuthentication;
 use App\Lib\Domain\Helpers\DomainError;
+use App\Lib\Domain\Helpers\DomainErrorCase;
 use App\Lib\Domain\Usecases\Authentication\{AuthenticationParams};
 use Exception;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -70,6 +71,24 @@ class OAuthAuthenticationTest extends TestCase
         ->method('authenticate')
         ->will($this->throwException(new OAuthError(OAuthErrorCase::invalidData)));
 
-        $this->assertTrue($this->sut->auth($params) instanceof DomainError);
+        $this->assertEquals($this->sut->auth($params), new DomainError(DomainErrorCase::BadRequest));
     }
+
+    /**
+     * Should throw InternalError if OAuthError returns Unexpected Exception.
+     * 
+     * @return void
+     */
+    public function test_should_throw_internal_error_if_o_auth_error_returns_unexpected_exception()
+    {
+        $params = new AuthenticationParams(email: $this->email, secret: $this->secret);
+        $this->oAuthClientSpy->expects($this->once())
+        ->method('authenticate')
+        ->will($this->throwException(new Exception()));
+
+        $this->assertEquals($this->sut->auth($params), new DomainError(DomainErrorCase::Unexpected));
+    }
+
+    
+  
 }

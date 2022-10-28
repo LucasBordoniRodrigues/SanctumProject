@@ -8,6 +8,7 @@ use App\Lib\Data\OAuth\OAuthClient;
 use App\Lib\Data\OAuth\OAuthError;
 use App\Lib\Domain\Helpers\DomainError;
 use App\Lib\Domain\Helpers\DomainErrorCase;
+use Exception;
 use Throwable;
 
 class OAuthAuthentication 
@@ -28,6 +29,9 @@ class OAuthAuthentication
             if ($exception->getCode() == 400){
                 return new DomainError(DomainErrorCase::BadRequest);
             }
+
+            return new DomainError(DomainErrorCase::Unexpected);
+        } catch(Throwable $exception) {
 
             return new DomainError(DomainErrorCase::Unexpected);
         }
