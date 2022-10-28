@@ -1,8 +1,8 @@
 # OAuth Authentication Usecase
 
 > ## Caso de sucesso
-1. Sistema valida os dados
-2. Sistema faz a utilização de um meio de autenticação
+1. [x] Sistema valida os dados
+2. [x] Sistema faz a utilização de um meio de autenticação
 3. Sistema valida os dados recebidos
 4. Sistema entrega o Token
 

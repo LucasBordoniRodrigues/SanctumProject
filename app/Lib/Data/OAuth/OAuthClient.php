@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Lib\Data\Authenticator;
+namespace App\Lib\Data\OAuth;
 
 
 abstract class OAuthClient 

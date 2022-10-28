@@ -6,7 +6,7 @@ use Mockery;
 use Mockery\MockInterface;
 use Tests\TestCase;
 
-use App\Lib\Data\Authenticator\OAuthClient;
+use App\Lib\Data\OAuth\OAuthClient;
 use App\Lib\Data\Usecases\OAuthAuthentication;
 
 use App\Lib\Domain\Usecases\Authentication\{AuthenticationParams};
