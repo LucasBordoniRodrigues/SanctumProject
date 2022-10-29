@@ -49,11 +49,11 @@ class OAuthAdapterTest extends TestCase
 
 
     /**
-     * Should call authenticate with invalid credentials
+     * Should throw InvalidCredentials if OAuthClientAdapter receive invalid credentials
      * 
      * @return void
      */
-    public function test_should_call_authenticate_with_invalid_credentials()
+    public function test_should_throw_invalid_credentials_if_o_auth_client_adapters_receive_invalid_credentials()
     {
         $this->invalidCredentials();
         $this->expectException(OAuthError::class);
