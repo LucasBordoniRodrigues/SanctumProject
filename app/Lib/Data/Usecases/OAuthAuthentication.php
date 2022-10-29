@@ -30,16 +30,16 @@ class OAuthAuthentication implements Authentication
             return (new OAuthAccountModel(name: $auth['name'], token: $auth['token']))->toEntity();
         } catch (OAuthError $exception) {
             if ($exception->getCode() == 400){
-                return new DomainError(DomainErrorCase::BadRequest);
+                throw new DomainError(DomainErrorCase::BadRequest);
             }
 
             if ($exception->getCode() == 401){
-                return new DomainError(DomainErrorCase::Unauthorized);
+                throw new DomainError(DomainErrorCase::Unauthorized);
             }
 
-            return new DomainError(DomainErrorCase::Unexpected);
+            throw new DomainError(DomainErrorCase::Unexpected);
         } catch(Throwable $exception) {
-            return new DomainError(DomainErrorCase::Unexpected);
+            throw new DomainError(DomainErrorCase::Unexpected);
         }
     }
 }

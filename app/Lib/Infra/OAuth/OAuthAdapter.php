@@ -22,6 +22,7 @@ class OAuthAdapter
         if($user != null && password_verify($secret, $user->password)){
             return ['name' => $user->name, 'token' => $user->createToken("API TOKEN")->plainTextToken];
         }
+        
         throw new OAuthError(OAuthErrorCase::InvalidCredentials);
     }
 }

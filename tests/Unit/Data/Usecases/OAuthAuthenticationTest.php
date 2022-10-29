@@ -95,7 +95,9 @@ class OAuthAuthenticationTest extends TestCase
     {
         $this->errorCase(new OAuthError(OAuthErrorCase::InvalidData));
         
-        $this->assertEquals($this->sut->auth($this->params), new DomainError(DomainErrorCase::BadRequest));
+        $this->expectException(DomainError::class);
+
+        $this->sut->auth($this->params);
     }
 
     /**
@@ -107,7 +109,9 @@ class OAuthAuthenticationTest extends TestCase
     {
         $this->errorCase(new Exception());
 
-        $this->assertEquals($this->sut->auth($this->params), new DomainError(DomainErrorCase::Unexpected));
+        $this->expectException(DomainError::class);
+
+        $this->sut->auth($this->params);
     }
 
     /**
@@ -119,7 +123,9 @@ class OAuthAuthenticationTest extends TestCase
     {
         $this->errorCase(new OAuthError(OAuthErrorCase::InvalidCredentials));
 
-        $this->assertEquals($this->sut->auth($this->params), new DomainError(DomainErrorCase::Unauthorized));
+        $this->expectException(DomainError::class);
+
+        $this->sut->auth($this->params);
     }
 
     /**
@@ -146,6 +152,9 @@ class OAuthAuthenticationTest extends TestCase
         ->method('authenticate')
         ->will($this->returnValue(["invalid_name" => $this->name, "invalid_token" => $this->token]));
 
-        $this->assertEquals($this->sut->auth($this->params), new DomainError(DomainErrorCase::Unexpected));
+
+        $this->expectException(DomainError::class);
+
+        $this->sut->auth($this->params);
     }
 }
