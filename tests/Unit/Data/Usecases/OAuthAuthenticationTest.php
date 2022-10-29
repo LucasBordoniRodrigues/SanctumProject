@@ -12,7 +12,6 @@ use App\Lib\Data\OAuth\OAuthErrorCase;
 use App\Lib\Data\Usecases\OAuthAuthentication;
 
 use App\Lib\Domain\Helpers\DomainError;
-use App\Lib\Domain\Helpers\DomainErrorCase;
 use App\Lib\Domain\Usecases\Authentication\{AuthenticationParams};
 
 class OAuthClientSpy implements OAuthClient

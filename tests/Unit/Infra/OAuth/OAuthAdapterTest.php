@@ -2,12 +2,11 @@
 
 namespace Tests\Unit\Infra\OAuth;
 
-use App\Lib\Data\OAuth\OAuthError;
-use App\Lib\Data\OAuth\OAuthErrorCase;
-use App\Lib\Infra\OAuth\OAuthAdapter;
-use App\Models\User;
-use Exception;
 use Tests\TestCase;
+use App\Models\User;
+
+use App\Lib\Data\OAuth\OAuthError;
+use App\Lib\Infra\OAuth\OAuthAdapter;
 
 class OAuthAdapterTest extends TestCase
 {
