@@ -1,5 +1,9 @@
 <?php
 
+use App\Lib\Data\Usecases\OAuthAuthentication;
+use App\Lib\Infra\OAuth\OAuthAdapter;
+use App\Lib\Presentation\Presenters\AuthPresenter;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +17,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::controller(AuthPresenter::class)->group(function () {
+    Route::get('/auth', 'auth');
 });

@@ -2,12 +2,13 @@
 
 namespace App\Lib\Infra\OAuth;
 
+use App\Lib\Data\OAuth\OAuthClient;
 use App\Models\User;
 
 use App\Lib\Data\OAuth\OAuthError;
 use App\Lib\Data\OAuth\OAuthErrorCase;
 
-class OAuthAdapter
+class OAuthAdapter implements OAuthClient
 {
     private User $user;
 

@@ -12,4 +12,12 @@ class AccountEntity {
         $this->name = $name;
         $this->token = $token;
     }
+
+    public function toArray()
+    {
+        return [
+            "name" => $this->name,
+            "token" => $this->token
+        ];
+    }
 }

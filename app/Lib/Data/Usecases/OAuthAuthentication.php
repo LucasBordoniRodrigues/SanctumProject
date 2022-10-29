@@ -23,7 +23,7 @@ class OAuthAuthentication implements Authentication
         $this->oAuthClient = $oAuthClient;
     }
 
-    public function auth(AuthenticationParams $params) : DomainError|AccountEntity
+    public function auth(AuthenticationParams $params) : AccountEntity
     {
         try {
             $auth = $this->oAuthClient->authenticate($params->email, $params->secret);
