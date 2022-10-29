@@ -2,7 +2,7 @@
 
 > ## Sucesso
 
-1. Resposta com token e nome do usuário
+1. [x] Resposta com token e nome do usuário
 
 > ## Erros
 
