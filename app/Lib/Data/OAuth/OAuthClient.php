@@ -3,7 +3,7 @@
 namespace App\Lib\Data\OAuth;
 
 
-abstract class OAuthClient 
+interface OAuthClient 
 {
-    abstract public function authenticate(string $email, string $secret): array;
+    public function authenticate(string $email, string $secret): array;
 }

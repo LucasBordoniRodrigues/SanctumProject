@@ -15,7 +15,7 @@ use App\Lib\Domain\Helpers\DomainError;
 use App\Lib\Domain\Helpers\DomainErrorCase;
 use App\Lib\Domain\Usecases\Authentication\{AuthenticationParams};
 
-class OAuthClientSpy extends OAuthClient
+class OAuthClientSpy implements OAuthClient
 {	
     /**
 	 * Authenticate client
@@ -25,7 +25,8 @@ class OAuthClientSpy extends OAuthClient
 	 *
 	 * @return mixed
 	 */
-	public function authenticate(string $email, string $secret): array {
+	public function authenticate(string $email, string $secret): array 
+    {
         return [];
     }
 }
