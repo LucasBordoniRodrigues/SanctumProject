@@ -17,4 +17,9 @@ class AuthPresenter
     {
         $this->validation->validate(field: 'email', value: $email);
     }
+
+    public function validatePassword(string $password): void
+    {
+        $this->validation->validate(field: 'password', value: $password);
+    }
 }

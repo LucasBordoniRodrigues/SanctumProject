@@ -29,12 +29,14 @@ class AuthPresenterTest extends TestCase
     private MockObject|Validation $validation;
     private AuthPresenter $sut;
     private string $email;
+    private string $password;
 
     protected function setUp(): void
     {
         $this->validation = $this->createMock(ValidationSpy::class);
         $this->sut = new AuthPresenter(validation: $this->validation);
         $this->email = $this->faker->email();
+        $this->password = $this->faker->password();
     }
 
     /**
@@ -48,5 +50,18 @@ class AuthPresenterTest extends TestCase
         ->method('validate')->with("email", $this->email);
 
         $this->sut->validateEmail($this->email);
+    }
+
+    /**
+     * Should call Validation with correct password
+     * 
+     * @return void
+     */
+    public function test_should_call_validation_with_correct_password()
+    {
+        $this->validation->expects($this->once())
+        ->method('validate')->with("password", $this->password);
+
+        $this->sut->validatePassword($this->password);
     }
 }
