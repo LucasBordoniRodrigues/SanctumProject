@@ -16,11 +16,11 @@ class ValidationSpy implements Validation
 	 * @param string $field
 	 * @param string $value
 	 *
-	 * @return ?string
+	 * @return string
 	 */
-	public function validate(string $field, string $value): ?string 
+	public function validate(string $field, string $value): string 
     {
-        return null;
+        return "";
 	}
 }
 
