@@ -15,8 +15,6 @@ use App\Lib\Domain\Helpers\DomainError;
 use App\Lib\Domain\Helpers\DomainErrorCase;
 use App\Lib\Domain\Usecases\Authentication\{AuthenticationParams};
 
-
-
 class OAuthClientSpy extends OAuthClient
 {	
     /**
@@ -88,11 +86,11 @@ class OAuthAuthenticationTest extends TestCase
     }
 
     /**
-     * Should throw BadRequest if OAuthError returns Invalid Data.
+     * Should throw BadRequest if OAuthClient returns Invalid Data.
      * 
      * @return void
      */
-    public function test_should_throw_bad_request_if_o_auth_error_returns_invalid_data()
+    public function test_should_throw_bad_request_if_o_auth_client_returns_invalid_data()
     {
         $this->errorCase(new OAuthError(OAuthErrorCase::InvalidData));
         
@@ -100,11 +98,11 @@ class OAuthAuthenticationTest extends TestCase
     }
 
     /**
-     * Should throw InternalError if OAuthError returns Unexpected Exception.
+     * Should throw InternalError if OAuthClient returns Unexpected Exception.
      * 
      * @return void
      */
-    public function test_should_throw_internal_error_if_o_auth_error_returns_unexpected_exception()
+    public function test_should_throw_internal_error_if_o_auth_client_returns_unexpected_exception()
     {
         $this->errorCase(new Exception());
 
@@ -112,11 +110,11 @@ class OAuthAuthenticationTest extends TestCase
     }
 
     /**
-     * Should throw Unauthorized if OAuthError returns Invalid Credentials.
+     * Should throw Unauthorized if OAuthClient returns Invalid Credentials.
      * 
      * @return void
      */
-    public function test_should_throw_unauthorized_if_o_auth_error_returns_invalid_credentials()
+    public function test_should_throw_unauthorized_if_o_auth_client_returns_invalid_credentials()
     {
         $this->errorCase(new OAuthError(OAuthErrorCase::InvalidCredentials));
 
@@ -137,11 +135,11 @@ class OAuthAuthenticationTest extends TestCase
     }
 
     /**
-     * Should throw InternalError if OAuthError returns Unexpected Exception Because is sended Invalid Data.
+     * Should throw InternalError if OAuthClient returns success but invalid response
      * 
      * @return void
      */
-    public function test_should_throw_internal_error_if_o_auth_error_returns_unexpected_exception_because_is_sended_invalid_data()
+    public function test_should_throw_internal_error_if_o_auth_client_returns_success_but_invalid_response()
     {
         $this->oAuthClientSpy->expects($this->once())
         ->method('authenticate')

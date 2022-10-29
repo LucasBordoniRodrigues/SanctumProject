@@ -2,17 +2,17 @@
 
 namespace App\Lib\Data\Usecases;
 
-use App\Lib\Domain\Usecases\Authentication\Authentication;
 use Throwable;
 
+use App\Lib\Data\Models\OAuthAccountModel;
 use App\Lib\Data\OAuth\OAuthClient;
 use App\Lib\Data\OAuth\OAuthError;
-use App\Lib\Data\Models\OAuthAccountModel;
 
-use App\Lib\Domain\Usecases\Authentication\AuthenticationParams;
 use App\Lib\Domain\Entities\AccountEntity;
 use App\Lib\Domain\Helpers\DomainError;
 use App\Lib\Domain\Helpers\DomainErrorCase;
+use App\Lib\Domain\Usecases\Authentication\Authentication;
+use App\Lib\Domain\Usecases\Authentication\AuthenticationParams;
 
 class OAuthAuthentication implements Authentication
 {
@@ -39,7 +39,6 @@ class OAuthAuthentication implements Authentication
 
             return new DomainError(DomainErrorCase::Unexpected);
         } catch(Throwable $exception) {
-
             return new DomainError(DomainErrorCase::Unexpected);
         }
     }
