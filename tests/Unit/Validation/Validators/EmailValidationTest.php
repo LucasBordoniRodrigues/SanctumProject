@@ -15,6 +15,14 @@ class EmailValidation extends FieldValidation
 
 class EmailValidationTest extends TestCase
 {
+    private EmailValidation $sut;
+    private string $field;
+
+    protected function setUp(): void
+    {
+        $this->field = "any_field";
+        $this->sut = new EmailValidation($this->field);
+    }
 
     /**
      * Should return null if value is empty
@@ -23,8 +31,7 @@ class EmailValidationTest extends TestCase
      */
     public function test_should_return_null_if_value_is_empty()
     {
-        $sut = new EmailValidation("any_field");
-        $this->assertEquals(null, $sut->validate("any_value")); 
+        $this->assertEquals(null, $this->sut->validate("any_value")); 
     }
 
     /**
@@ -34,7 +41,6 @@ class EmailValidationTest extends TestCase
      */
     public function test_should_return_null_if_value_is_null()
     {
-        $sut = new EmailValidation("any_field");
-        $this->assertEquals(null, $sut->validate(null)); 
+        $this->assertEquals(null, $this->sut->validate(null)); 
     }
 }
