@@ -8,7 +8,8 @@ class EmailValidation extends FieldValidation
 {
 	public function validate(?string $value): ?string 
     {
-        return null;
+        $isValid = filter_var($value, FILTER_VALIDATE_EMAIL) || ($value == null || $value == "");
+        return $isValid ? null : "$this->field is invalid";
 	}
 }
 
@@ -25,32 +26,42 @@ class EmailValidationTest extends TestCase
     }
 
     /**
-     * Should return null if value is empty
+     * Should return null if email is empty
      * 
      * @return void
      */
-    public function test_should_return_null_if_value_is_empty()
+    public function test_should_return_null_if_email_is_empty()
     {
-        $this->assertEquals(null, $this->sut->validate("any_value")); 
+        $this->assertEquals(null, $this->sut->validate("")); 
     }
 
     /**
-     * Should return null if value is null
+     * Should return null if email is null
      * 
      * @return void
      */
-    public function test_should_return_null_if_value_is_null()
+    public function test_should_return_null_if_email_is_null()
     {
         $this->assertEquals(null, $this->sut->validate(null)); 
     }
 
     /**
-     * Should return null if value is valid
+     * Should return null if email is valid
      * 
      * @return void
      */
-    public function test_should_return_null_if_value_is_valid()
+    public function test_should_return_null_if_email_is_valid()
     {
         $this->assertEquals(null, $this->sut->validate($this->faker->email())); 
+    }
+
+    /**
+     * Should return error if email is invalid
+     * 
+     * @return void
+     */
+    public function test_should_return_error_if_email_is_invalid()
+    {
+        $this->assertEquals("$this->field is invalid", $this->sut->validate("invalid_mail")); 
     }
 }
