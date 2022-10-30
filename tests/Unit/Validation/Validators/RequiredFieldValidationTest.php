@@ -1,10 +1,11 @@
 <?php
 
 namespace Tests\Unit\Validation\Validators;
+
 use Tests\TestCase;
 
 interface FieldValidation{
-    public function validate(string $value): ?string;
+    public function validate(?string $value): ?string;
 }
 
 class RequiredFieldValidation implements FieldValidation
@@ -16,14 +17,23 @@ class RequiredFieldValidation implements FieldValidation
         $this->field = $field;
     }
 
-    public function validate(string $value): ?string 
+    public function validate(?string $value): ?string 
     {
-        return null;
+        return $value != null && $value != "" ? null : "$this->field is required"; 
     }
 }
 
 class RequiredFieldValidationTest extends TestCase
 {
+    private RequiredFieldValidation $sut;
+    private string $field;
+
+    public function setUp(): void 
+    {
+        $this->field = "any_field";
+        $this->sut = new RequiredFieldValidation($this->field);
+    }
+
     /**
      * Should return null if value is not empty
      * 
@@ -31,10 +41,16 @@ class RequiredFieldValidationTest extends TestCase
      */
     public function test_should_return_null_if_value_is_not_empty()
     {
-        $sut = new RequiredFieldValidation("any_field");
+        $this->assertEquals(null, $this->sut->validate("any_value")); 
+    }
 
-        $error = $sut->validate("any_value");
-
-        $this->assertEquals(null, $error); 
+    /**
+     * Should return error if value is empty
+     * 
+     * @return void
+     */
+    public function test_should_return_error_if_value_is_empty()
+    {
+        $this->assertEquals("$this->field is required", $this->sut->validate("")); 
     }
 }
