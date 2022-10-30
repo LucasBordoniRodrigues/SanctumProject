@@ -3,6 +3,7 @@
 namespace Tests\Unit\Validation\Validators;
 use App\Lib\Presentation\Protocols\Validation;
 use App\Lib\Validation\Protocols\FieldValidation;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tests\TestCase;
 
 class ValidationComposite implements Validation 
@@ -36,6 +37,46 @@ class FieldValidationSpy extends FieldValidation
 
 class ValidationCompositeTest extends TestCase
 {
+    private ValidationComposite $sut;
+    private MockObject|FieldValidation $validation1;
+    private MockObject|FieldValidation $validation2;
+    private MockObject|FieldValidation $validation3;
+
+    protected function setUp(): void
+    {
+        $this->validation1 = $this->createMock(FieldValidationSpy::class);
+        $this->validation1->field = "any_field";
+        $this->mockValidation1(null);
+
+        $this->validation2 = $this->createMock(FieldValidationSpy::class);
+        $this->validation2->field = "any_field";
+        $this->mockValidation2(null);
+
+        $this->validation3 = $this->createMock(FieldValidationSpy::class);
+        $this->validation3->field = "other_field";
+        $this->mockValidation3(null);
+
+        $this-> sut = new ValidationComposite([$this->validation1, $this->validation2, $this->validation3]);
+    }
+
+    private function mockValidation1(?string $error)
+    {
+        $this->validation1
+        ->method("validate")->willReturn($error);
+    }
+
+    private function mockValidation2(?string $error)
+    {
+        $this->validation2
+        ->method("validate")->willReturn($error);
+    }
+
+    private function mockValidation3(?string $error)
+    {
+        $this->validation3
+        ->method("validate")->willReturn($error);
+    }
+
     /**
      * Should return null or empty if all validations return null or empty
      * 
@@ -43,24 +84,8 @@ class ValidationCompositeTest extends TestCase
      */
     public function test_should_return_null_or_empty_if_all_validations_return_null_or_empty()
     {
-      
-        $validation1 = $this->createMock(FieldValidationSpy::class);
-        $validation1->field = "any_field";
-
-        $validation1
-        ->method("validate")->willReturn(null);
-        
-        $validation2 = $this->createMock(FieldValidationSpy::class);
-        $validation2->field = "any_field";
-
-
-        $validation2
-        ->method("validate")->willReturn("");
-
-        $sut = new ValidationComposite([$validation1, $validation2]);
-
-
-        $this->assertEquals(null, $sut->validate(field: "any_field", value: "any_value"));
+        $this->mockValidation2("");
+        $this->assertEquals(null, $this->sut->validate(field: "any_field", value: "any_value"));
     }
 
 }
