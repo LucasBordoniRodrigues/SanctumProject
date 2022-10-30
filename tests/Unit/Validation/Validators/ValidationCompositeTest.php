@@ -19,13 +19,17 @@ class ValidationComposite implements Validation
     {
         $error = null;
         foreach ($this->validations as $validation) {
-            $error = $validation->validate($value);
-            if($error != null && $error != ""){
-                return $error;
+            if($validation->field == $field){
+                $error = $validation->validate($value);
+                if($error != null && $error != ""){
+                    return $error;
+                }
             }
         }
         return $error;
 	}
+
+
 }
 
 class FieldValidationSpy extends FieldValidation
@@ -52,15 +56,15 @@ class ValidationCompositeTest extends TestCase
     protected function setUp(): void
     {
         $this->validation1 = $this->createMock(FieldValidationSpy::class);
-        $this->validation1->field = "any_field";
+        $this->validation1->field = "other_field";
 
         $this->validation2 = $this->createMock(FieldValidationSpy::class);
         $this->validation2->field = "any_field";
 
         $this->validation3 = $this->createMock(FieldValidationSpy::class);
-        $this->validation3->field = "other_field";
+        $this->validation3->field = "any_field";
 
-        $this-> sut = new ValidationComposite([$this->validation1, $this->validation2, $this->validation3]);
+        $this->sut = new ValidationComposite([$this->validation1, $this->validation2, $this->validation3]);
     }
 
     private function mockValidation1(?string $error)
@@ -106,7 +110,22 @@ class ValidationCompositeTest extends TestCase
         $this->mockValidation2("error_2");
         $this->mockValidation3("error_3");
 
-        $this->assertEquals("error_1", $this->sut->validate(field: "any_field", value: "any_value"));
+        $this->assertEquals("error_2", $this->sut->validate(field: "any_field", value: "any_value"));
+    }
+
+
+    /**
+     * Should return first error of the field
+     * 
+     * @return void
+     */
+    public function test_should_return_first_error_of_the_field()
+    {
+        $this->mockValidation1("error_1");
+        $this->mockValidation2("error_2");
+        $this->mockValidation3("error_3");
+
+        $this->assertEquals("error_1", $this->sut->validate(field: "other_field", value: "any_value"));
     }
 
 }
