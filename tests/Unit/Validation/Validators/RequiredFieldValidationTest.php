@@ -4,24 +4,7 @@ namespace Tests\Unit\Validation\Validators;
 
 use Tests\TestCase;
 
-interface FieldValidation{
-    public function validate(?string $value): ?string;
-}
-
-class RequiredFieldValidation implements FieldValidation
-{
-    public string $field;
-
-    public function __construct(string $field)
-    {
-        $this->field = $field;
-    }
-
-    public function validate(?string $value): ?string 
-    {
-        return $value != null && $value != "" ? null : "$this->field is required"; 
-    }
-}
+use App\Lib\Validation\Validators\RequiredFieldValidation;
 
 class RequiredFieldValidationTest extends TestCase
 {
@@ -52,5 +35,15 @@ class RequiredFieldValidationTest extends TestCase
     public function test_should_return_error_if_value_is_empty()
     {
         $this->assertEquals("$this->field is required", $this->sut->validate("")); 
+    }
+
+    /**
+     * Should return error if value is null
+     * 
+     * @return void
+     */
+    public function test_should_return_error_if_value_is_null()
+    {
+        $this->assertEquals("$this->field is required", $this->sut->validate(null)); 
     }
 }
