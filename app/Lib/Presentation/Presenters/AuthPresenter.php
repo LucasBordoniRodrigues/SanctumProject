@@ -14,8 +14,8 @@ class AuthPresenter
 {
     private Validation $validation;
     private Authentication $authentication;
-    private string $email;
-    private string $password;
+    private ?string $email;
+    private ?string $password;
 
     public function __construct(Validation $validation, Authentication $authentication)
     {
@@ -23,12 +23,12 @@ class AuthPresenter
         $this->authentication = $authentication;
     }
 
-    public function validateEmail(string $email): void
+    public function validateEmail(?string $email): void
     {
         $this->email = $this->validation->validate(field: 'email', value: $email);
     }
 
-    public function validatePassword(string $password): void
+    public function validatePassword(?string $password): void
     {
         $this->password = $this->validation->validate(field: 'password', value: $password);
     }

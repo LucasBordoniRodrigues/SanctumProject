@@ -28,7 +28,7 @@ class ValidationSpy implements Validation
 	 *
 	 * @return string
 	 */
-	public function validate(string $field, string $value): string 
+	public function validate(string $field, ?string $value): ?string 
     {
         return "";
 	}
