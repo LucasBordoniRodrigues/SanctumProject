@@ -1,18 +1,10 @@
 <?php 
 
 namespace Tests\Unit\Validation\Validators;
-use App\Lib\Validation\Protocols\FieldValidation;
+
 use Tests\TestCase;
 
-class EmailValidation extends FieldValidation
-{
-	public function validate(?string $value): ?string 
-    {
-        $isValid = filter_var($value, FILTER_VALIDATE_EMAIL) || ($value == null || $value == "");
-        return $isValid ? null : "$this->field is invalid";
-	}
-}
-
+use App\Lib\Validation\Validators\EmailValidation;
 
 class EmailValidationTest extends TestCase
 {
