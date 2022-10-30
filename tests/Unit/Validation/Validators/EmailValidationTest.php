@@ -43,4 +43,14 @@ class EmailValidationTest extends TestCase
     {
         $this->assertEquals(null, $this->sut->validate(null)); 
     }
+
+    /**
+     * Should return null if value is valid
+     * 
+     * @return void
+     */
+    public function test_should_return_null_if_value_is_valid()
+    {
+        $this->assertEquals(null, $this->sut->validate($this->faker->email())); 
+    }
 }
