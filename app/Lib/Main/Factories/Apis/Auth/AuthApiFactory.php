@@ -2,9 +2,10 @@
 
 namespace App\Lib\Main\Factories\Apis\Auth;
 
+use Illuminate\Http\Request;
+
 use App\Lib\Main\Factories\Usecases\Authentication\AuthenticationFactory;
 use App\Lib\Presentation\Presenters\AuthPresenter;
-use Illuminate\Http\Request;
 
 class AuthApiFactory
 {

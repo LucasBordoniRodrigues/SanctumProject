@@ -40,6 +40,7 @@ class AuthPresenter
     public function validateEmail(?string $email): void
     {
         $validation = $this->validation->validate(field: 'email', value: $email);
+        
         if($validation == null) {
             $this->email = $email;
         } else {

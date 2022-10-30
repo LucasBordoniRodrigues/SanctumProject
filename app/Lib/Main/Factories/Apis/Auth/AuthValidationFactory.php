@@ -16,6 +16,6 @@ class AuthValidationFactory
                   new RequiredFieldValidation('email'),
                   new EmailValidation('email'),
                   new RequiredFieldValidation('password'),
-              ]);
+            ]);
       }
 }
