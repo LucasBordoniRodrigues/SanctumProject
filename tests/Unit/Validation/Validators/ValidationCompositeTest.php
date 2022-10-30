@@ -1,36 +1,12 @@
 <?php 
 
 namespace Tests\Unit\Validation\Validators;
-use App\Lib\Presentation\Protocols\Validation;
-use App\Lib\Validation\Protocols\FieldValidation;
+
 use PHPUnit\Framework\MockObject\MockObject;
 use Tests\TestCase;
 
-class ValidationComposite implements Validation 
-{
-    private array $validations;
-
-    public function __construct(array $validations)
-    {
-        $this->validations = $validations;
-    }
-
-	public function validate(string $field, ?string $value): ?string 
-    {
-        $error = null;
-        foreach ($this->validations as $validation) {
-            if($validation->field == $field){
-                $error = $validation->validate($value);
-                if($error != null && $error != ""){
-                    return $error;
-                }
-            }
-        }
-        return $error;
-	}
-
-
-}
+use App\Lib\Validation\Protocols\FieldValidation;
+use App\Lib\Validation\Validators\ValidationComposite;
 
 class FieldValidationSpy extends FieldValidation
 {
