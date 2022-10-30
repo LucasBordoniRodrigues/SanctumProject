@@ -105,7 +105,7 @@ class AuthPresenterTest extends TestCase
 
         $this->validationSpy->expects($this->exactly(2))
         ->method('validate')->withConsecutive(["email", $this->email], ["password", $this->password])
-        ->willReturnOnConsecutiveCalls($this->email, $this->password);
+        ->willReturnOnConsecutiveCalls(null, null);
 
         $this->sut->validateEmail($this->email);
         $this->sut->validatePassword($this->password);
@@ -125,7 +125,7 @@ class AuthPresenterTest extends TestCase
     {
         $this->validationSpy->expects($this->exactly(2))
         ->method('validate')->withConsecutive(["email", $this->email], ["password", $this->password])
-        ->willReturnOnConsecutiveCalls($this->email, $this->password);
+        ->willReturnOnConsecutiveCalls(null, null);
 
         $this->sut->validateEmail($this->email);
         $this->sut->validatePassword($this->password);
@@ -134,7 +134,9 @@ class AuthPresenterTest extends TestCase
         ->method('auth')->with(new AuthenticationParams(email: $this->email, secret: $this->password))
         ->willThrowException(new DomainError(DomainErrorCase::Unauthorized));
 
-        $this->assertEquals(new DomainError(DomainErrorCase::Unauthorized), $this->sut->auth());
+        $this->expectException(DomainError::class);
+
+        $this->sut->auth();
     }
 
     /**
@@ -146,7 +148,7 @@ class AuthPresenterTest extends TestCase
     {
         $this->validationSpy->expects($this->exactly(2))
         ->method('validate')->withConsecutive(["email", $this->email], ["password", $this->password])
-        ->willReturnOnConsecutiveCalls($this->email, $this->password);
+        ->willReturnOnConsecutiveCalls(null, null);
 
         $this->sut->validateEmail($this->email);
         $this->sut->validatePassword($this->password);

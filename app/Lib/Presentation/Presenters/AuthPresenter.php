@@ -2,9 +2,10 @@
 
 namespace App\Lib\Presentation\Presenters;
 
-use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 
 use App\Lib\Domain\Helpers\DomainError;
+use App\Lib\Domain\Helpers\DomainErrorCase;
 use App\Lib\Domain\Usecases\Authentication\Authentication;
 use App\Lib\Domain\Usecases\Authentication\AuthenticationParams;
 
@@ -23,14 +24,38 @@ class AuthPresenter
         $this->authentication = $authentication;
     }
 
+    public function request(Request $request)
+    {
+        $requestData = $request->all(['email', 'password']);
+        
+        try {
+            $this->validateEmail($requestData['email']);
+            $this->validatePassword($requestData['password']);
+            return response()->json($this->auth());
+        } catch (\Throwable $e) {
+            return response()->json(["exception" => $e->getMessage()], $e->getCode());
+        }
+    }
+
     public function validateEmail(?string $email): void
     {
-        $this->email = $this->validation->validate(field: 'email', value: $email);
+        $validation = $this->validation->validate(field: 'email', value: $email);
+        if($validation == null) {
+            $this->email = $email;
+        } else {
+            throw new DomainError(DomainErrorCase::BadRequest, message: $validation);
+        }
     }
 
     public function validatePassword(?string $password): void
     {
-        $this->password = $this->validation->validate(field: 'password', value: $password);
+        $validation = $this->validation->validate(field: 'password', value: $password);
+
+        if($validation == null) {
+            $this->password = $password;
+        } else {
+            throw new DomainError(DomainErrorCase::BadRequest, message: $validation);
+        }
     }
 
     public function auth()
@@ -39,7 +64,7 @@ class AuthPresenter
             $account = $this->authentication->auth(new AuthenticationParams(email: $this->email, secret: $this->password));
             return $account->toArray();
         }catch(DomainError $e){
-            return $e;
+            throw $e;
         }
     }
 }

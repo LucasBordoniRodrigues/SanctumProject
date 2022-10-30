@@ -17,6 +17,4 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::controller(AuthPresenter::class)->group(function () {
-    Route::get('/auth', 'auth');
-});
+
