@@ -17,7 +17,14 @@ class ValidationComposite implements Validation
 
 	public function validate(string $field, ?string $value): ?string 
     {
-        return null;
+        $error = null;
+        foreach ($this->validations as $validation) {
+            $error = $validation->validate($value);
+            if($error != null && $error != ""){
+                return $error;
+            }
+        }
+        return $error;
 	}
 }
 
@@ -46,15 +53,12 @@ class ValidationCompositeTest extends TestCase
     {
         $this->validation1 = $this->createMock(FieldValidationSpy::class);
         $this->validation1->field = "any_field";
-        $this->mockValidation1(null);
 
         $this->validation2 = $this->createMock(FieldValidationSpy::class);
         $this->validation2->field = "any_field";
-        $this->mockValidation2(null);
 
         $this->validation3 = $this->createMock(FieldValidationSpy::class);
         $this->validation3->field = "other_field";
-        $this->mockValidation3(null);
 
         $this-> sut = new ValidationComposite([$this->validation1, $this->validation2, $this->validation3]);
     }
@@ -84,8 +88,25 @@ class ValidationCompositeTest extends TestCase
      */
     public function test_should_return_null_or_empty_if_all_validations_return_null_or_empty()
     {
-        $this->mockValidation2("");
+        $this->mockValidation1(null);
+        $this->mockValidation2(null);
+        $this->mockValidation3(null);
+
         $this->assertEquals(null, $this->sut->validate(field: "any_field", value: "any_value"));
+    }
+
+    /**
+     * Should return first error 
+     * 
+     * @return void
+     */
+    public function test_should_return_first_error()
+    {
+        $this->mockValidation1("error_1");
+        $this->mockValidation2("error_2");
+        $this->mockValidation3("error_3");
+
+        $this->assertEquals("error_1", $this->sut->validate(field: "any_field", value: "any_value"));
     }
 
 }
