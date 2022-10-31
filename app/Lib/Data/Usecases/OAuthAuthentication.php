@@ -26,7 +26,10 @@ class OAuthAuthentication implements Authentication
     public function auth(AuthenticationParams $params) : AccountEntity
     {
         try {
-            $auth = $this->oAuthClient->authenticate($params->email, $params->secret);
+            $credentials = new OAuthAuthenticationParams();
+            $credentials->fromDomain($params);
+            $auth = $this->oAuthClient->authenticate($credentials->email, $credentials->password);
+            
             return (new OAuthAccountModel(name: $auth['name'], token: $auth['token']))->toEntity();
         } catch (OAuthError $exception) {
             if ($exception->getCode() == 400){
@@ -41,5 +44,17 @@ class OAuthAuthentication implements Authentication
         } catch(Throwable $exception) {
             throw new DomainError(DomainErrorCase::Unexpected);
         }
+    }
+}
+
+class OAuthAuthenticationParams
+{
+    public string $email;
+    public string $password;
+
+    public function fromDomain(AuthenticationParams $params): void
+    {
+        $this->email = $params->email;
+        $this->password = $params->secret;
     }
 }
