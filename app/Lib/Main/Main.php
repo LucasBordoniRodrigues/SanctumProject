@@ -10,7 +10,7 @@ use App\Lib\Main\Factories\Apis\Auth\AuthApiFactory;
 Route::post("/auth", [AuthApiFactory::class, 'makeAuthApi']);
 
 /**
- * Check if user is auth
+ * Check if user is auth and can send sms
  */
 Route::get("/check-auth", function (){
     return response()->json(['auth' => true]);
