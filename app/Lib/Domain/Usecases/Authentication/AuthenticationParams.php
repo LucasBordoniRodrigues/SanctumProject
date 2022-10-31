@@ -12,6 +12,4 @@ class AuthenticationParams
         $this->email = $email;
         $this->secret = $secret;
     }
-
-
 }

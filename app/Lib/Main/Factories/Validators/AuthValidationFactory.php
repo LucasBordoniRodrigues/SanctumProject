@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Lib\Main\Factories\Apis\Auth;
+namespace App\Lib\Main\Factories\Validators;
 
 use App\Lib\Presentation\Protocols\Validation;
 

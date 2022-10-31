@@ -28,7 +28,8 @@ class AuthPresenter extends Presenter
         
         try {
             $this->validateFields($requestData);
-            return response()->json($this->auth());
+            $response = $this->auth();
+            return response()->json($response);
         } catch (\Throwable $e) {
             return response()->json(["exception" => $e->getMessage()], $e->getCode() != 0 ? $e->getCode() : 500);
         }

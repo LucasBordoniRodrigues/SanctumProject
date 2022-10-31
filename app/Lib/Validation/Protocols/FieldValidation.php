@@ -2,7 +2,8 @@
 
 namespace App\Lib\Validation\Protocols;
 
-abstract class FieldValidation{
+abstract class FieldValidation
+{
 
     public string $field;
     public function __construct(string $field)
