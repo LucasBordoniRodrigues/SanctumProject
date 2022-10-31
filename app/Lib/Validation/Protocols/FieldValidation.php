@@ -6,6 +6,7 @@ abstract class FieldValidation
 {
 
     public string $field;
+    
     public function __construct(string $field)
     {
         $this->field = $field;
