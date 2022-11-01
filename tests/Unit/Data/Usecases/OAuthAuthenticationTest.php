@@ -57,7 +57,8 @@ class OAuthAuthenticationTest extends TestCase
     private function mockAuthenticationCall()
     {
         return $this->oAuthClientSpy->expects($this->once())
-        ->method('authenticate');
+        ->method('authenticate')
+        ->with($this->params->email, $this->params->secret);
     }
 
     private function successCase()

@@ -4,7 +4,7 @@ namespace Tests\Unit\Main\Factories\Apis\Auth;
 
 use Tests\TestCase;
 
-use App\Lib\Main\Factories\Apis\Auth\AuthValidationFactory;
+use App\Lib\Main\Factories\Validators\AuthValidationFactory;
 
 use App\Lib\Validation\Validators\EmailValidation;
 use App\Lib\Validation\Validators\RequiredFieldValidation;

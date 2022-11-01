@@ -78,7 +78,7 @@ class AuthPresenterTest extends TestCase
         $this->validationSpy->expects($this->once())
         ->method('validate')->with("email", $this->email);
 
-        $this->sut->validateEmail($this->email);
+        $this->sut->validateFields(["email" => $this->email]);
     }
 
     /**
@@ -91,7 +91,7 @@ class AuthPresenterTest extends TestCase
         $this->validationSpy->expects($this->once())
         ->method('validate')->with("password", $this->password);
 
-        $this->sut->validatePassword($this->password);
+        $this->sut->validateFields(["password" => $this->password]);
     }
 
 
@@ -107,8 +107,9 @@ class AuthPresenterTest extends TestCase
         ->method('validate')->withConsecutive(["email", $this->email], ["password", $this->password])
         ->willReturnOnConsecutiveCalls(null, null);
 
-        $this->sut->validateEmail($this->email);
-        $this->sut->validatePassword($this->password);
+        $this->sut->validateFields(["email" => $this->email]);
+        $this->sut->validateFields(["password" => $this->password]);
+
 
         $this->authenticationSpy->expects($this->once())
         ->method('auth')->with(new AuthenticationParams(email: $this->email, secret: $this->password));
@@ -127,8 +128,8 @@ class AuthPresenterTest extends TestCase
         ->method('validate')->withConsecutive(["email", $this->email], ["password", $this->password])
         ->willReturnOnConsecutiveCalls(null, null);
 
-        $this->sut->validateEmail($this->email);
-        $this->sut->validatePassword($this->password);
+        $this->sut->validateFields(["email" => $this->email]);
+        $this->sut->validateFields(["password" => $this->password]);
 
         $this->authenticationSpy->expects($this->once())
         ->method('auth')->with(new AuthenticationParams(email: $this->email, secret: $this->password))
@@ -150,8 +151,8 @@ class AuthPresenterTest extends TestCase
         ->method('validate')->withConsecutive(["email", $this->email], ["password", $this->password])
         ->willReturnOnConsecutiveCalls(null, null);
 
-        $this->sut->validateEmail($this->email);
-        $this->sut->validatePassword($this->password);
+        $this->sut->validateFields(["email" => $this->email]);
+        $this->sut->validateFields(["password" => $this->password]);
 
         $this->authenticationSpy->expects($this->once())
         ->method('auth')->with(new AuthenticationParams(email: $this->email, secret: $this->password))
