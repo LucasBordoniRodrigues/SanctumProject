@@ -18,11 +18,11 @@ abstract class Presenter
         foreach ($fields as $field => $value) {
             $validation = $this->validation->validate(field: $field, value: $value);
         
-            if($validation == null) {
-                $this->$field = $value;
-            } else {
-                throw new DomainError(DomainErrorCase::BadRequest, message: $validation);
+            if($validation != null) {
+                throw new DomainError(DomainErrorCase::BadRequest, message: $validation);     
             }
+            
+            $this->$field = $value;
         }
     }
 
