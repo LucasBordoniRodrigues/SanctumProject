@@ -12,7 +12,7 @@ abstract class TestCase extends BaseTestCase
     use CreatesApplication;
     use RefreshDatabase;
 
-    
+
 
     public Generator $faker;
 
@@ -28,6 +28,4 @@ abstract class TestCase extends BaseTestCase
         $this->artisan('migrate');
         $this->artisan('db:seed --class=UserSeeder');
     }
- 
-
 }

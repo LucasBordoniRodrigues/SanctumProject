@@ -1,25 +1,24 @@
-<?php 
+<?php
 
 namespace Tests\Unit\Validation\Validators;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use Tests\TestCase;
-
 use App\Lib\Validation\Protocols\FieldValidation;
 use App\Lib\Validation\Validators\ValidationComposite;
 
 class FieldValidationSpy extends FieldValidation
 {
-    
-	/**
-	 *
-	 * @param ?string $value
-	 *
-	 * @return ?string
-	 */
-	public function validate(?string $value): ?string {
+    /**
+     *
+     * @param ?string $value
+     *
+     * @return ?string
+     */
+    public function validate(?string $value): ?string
+    {
         return null;
-	}
+    }
 }
 
 class ValidationCompositeTest extends TestCase
@@ -63,7 +62,7 @@ class ValidationCompositeTest extends TestCase
 
     /**
      * Should return null or empty if all validations return null or empty
-     * 
+     *
      * @return void
      */
     public function test_should_return_null_or_empty_if_all_validations_return_null_or_empty()
@@ -76,8 +75,8 @@ class ValidationCompositeTest extends TestCase
     }
 
     /**
-     * Should return first error 
-     * 
+     * Should return first error
+     *
      * @return void
      */
     public function test_should_return_first_error()
@@ -92,7 +91,7 @@ class ValidationCompositeTest extends TestCase
 
     /**
      * Should return first error of the field
-     * 
+     *
      * @return void
      */
     public function test_should_return_first_error_of_the_field()
@@ -103,5 +102,4 @@ class ValidationCompositeTest extends TestCase
 
         $this->assertEquals("error_1", $this->sut->validate(field: "other_field", value: "any_value"));
     }
-
 }

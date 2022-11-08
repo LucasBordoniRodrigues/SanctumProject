@@ -4,7 +4,6 @@ namespace Tests\Unit\Infra\OAuth;
 
 use Tests\TestCase;
 use App\Models\User;
-
 use App\Lib\Data\OAuth\OAuthError;
 use App\Lib\Infra\OAuth\OAuthAdapter;
 
@@ -36,7 +35,7 @@ class OAuthAdapterTest extends TestCase
 
     /**
      * Should call authenticate with valid credentials
-     * 
+     *
      * @return void
      */
     public function test_should_call_authenticate_with_valid_credentials()
@@ -49,7 +48,7 @@ class OAuthAdapterTest extends TestCase
 
     /**
      * Should throw InvalidCredentials if OAuthClientAdapter receive invalid credentials
-     * 
+     *
      * @return void
      */
     public function test_should_throw_invalid_credentials_if_o_auth_client_adapters_receive_invalid_credentials()

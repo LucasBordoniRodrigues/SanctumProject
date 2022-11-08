@@ -6,54 +6,49 @@ use App\Lib\Data\Models\OAuthAccountModel;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tests\TestCase;
 use Exception;
-
 use App\Lib\Domain\Entities\AccountEntity;
 use App\Lib\Domain\Helpers\DomainError;
 use App\Lib\Domain\Helpers\DomainErrorCase;
 use App\Lib\Domain\Usecases\Authentication\Authentication;
 use App\Lib\Domain\Usecases\Authentication\AuthenticationParams;
-
-
-use App\Lib\Presentation\Presenters\AuthPresenter;
+use App\Lib\Presentation\Presenters\LaravelAuthPresenter;
 use App\Lib\Presentation\Protocols\Validation;
 use Illuminate\Routing\ResponseFactory;
 
-class ValidationSpy implements Validation 
+class ValidationSpy implements Validation
 {
-    
-	/**
-	 *
-	 * @param string $field
-	 * @param string $value
-	 *
-	 * @return string
-	 */
-	public function validate(string $field, ?string $value): ?string 
+    /**
+     *
+     * @param string $field
+     * @param string $value
+     *
+     * @return string
+     */
+    public function validate(string $field, ?string $value): ?string
     {
         return "";
-	}
+    }
 }
 
 class AuthenticationSpy implements Authentication
 {
-    
-	/**
-	 *
-	 * @param AuthenticationParams $params
-	 *
-	 * @return AccountEntity
-	 */
-	public function auth(AuthenticationParams $params): AccountEntity
+    /**
+     *
+     * @param AuthenticationParams $params
+     *
+     * @return AccountEntity
+     */
+    public function auth(AuthenticationParams $params): AccountEntity
     {
         throw new Exception();
-	}
+    }
 }
 
-class AuthPresenterTest extends TestCase
+class LaravelAuthPresenterTest extends TestCase
 {
     private MockObject|Validation $validationSpy;
     private MockObject|Authentication $authenticationSpy;
-    private AuthPresenter $sut;
+    private LaravelAuthPresenter $sut;
     private string $email;
     private string $name;
     private string $password;
@@ -62,7 +57,7 @@ class AuthPresenterTest extends TestCase
     {
         $this->validationSpy = $this->createMock(ValidationSpy::class);
         $this->authenticationSpy = $this->createMock(AuthenticationSpy::class);
-        $this->sut = new AuthPresenter(validation: $this->validationSpy, authentication: $this->authenticationSpy);
+        $this->sut = new LaravelAuthPresenter(validation: $this->validationSpy, authentication: $this->authenticationSpy);
         $this->email = $this->faker->email();
         $this->name = $this->faker->name();
         $this->password = $this->faker->password();
@@ -70,7 +65,7 @@ class AuthPresenterTest extends TestCase
 
     /**
      * Should call Validation with correct email
-     * 
+     *
      * @return void
      */
     public function test_should_call_validation_with_correct_email()
@@ -83,7 +78,7 @@ class AuthPresenterTest extends TestCase
 
     /**
      * Should call Validation with correct password
-     * 
+     *
      * @return void
      */
     public function test_should_call_validation_with_correct_password()
@@ -97,7 +92,7 @@ class AuthPresenterTest extends TestCase
 
     /**
      * Should call Authentication with correct values
-     * 
+     *
      * @return void
      */
     public function test_should_call_authentication_with_correct_values()
@@ -113,13 +108,13 @@ class AuthPresenterTest extends TestCase
 
         $this->authenticationSpy->expects($this->once())
         ->method('auth')->with(new AuthenticationParams(email: $this->email, secret: $this->password));
-        
+
         $this->sut->auth();
     }
 
     /**
      * Should emit Unauthorized with invalid email or password
-     * 
+     *
      * @return void
      */
     public function test_should_emit_unauthorized_with_invalid_email_or_password()
@@ -142,7 +137,7 @@ class AuthPresenterTest extends TestCase
 
     /**
      * Should emit AccountEntity with valid credentials
-     * 
+     *
      * @return void
      */
     public function test_should_emit_account_entity_with_valid_credentials()
@@ -160,5 +155,4 @@ class AuthPresenterTest extends TestCase
 
         $this->assertEquals((new OAuthAccountModel(name: $this->name, token: $this->email))->toEntity()->toArray(), $this->sut->auth());
     }
-    
 }

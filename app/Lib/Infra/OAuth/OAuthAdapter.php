@@ -20,7 +20,7 @@ class OAuthAdapter implements OAuthClient
     {
         $user = $this->user->where(['email' => $email])->first();
         if ($user != null && password_verify($secret, $user->password)) {
-            return ['name' => $user->name, 'token' => $user->createToken("token-name", ["send:sms"])->plainTextToken];
+            return ['name' => $user->name, 'token' => $user->createToken("token-name", ["send-sms"])->plainTextToken];
         }
 
         throw new OAuthError(OAuthErrorCase::InvalidCredentials);

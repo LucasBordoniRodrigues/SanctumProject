@@ -2,15 +2,12 @@
 
 namespace App\Lib\Presentation\Presenters;
 
-use Illuminate\Http\Request;
-
 use App\Lib\Domain\Helpers\DomainError;
 use App\Lib\Domain\Usecases\Authentication\Authentication;
 use App\Lib\Domain\Usecases\Authentication\AuthenticationParams;
-
 use App\Lib\Presentation\Protocols\Validation;
 
-class AuthPresenter extends Presenter
+class LaravelAuthPresenter extends Presenter
 {
     private Authentication $authentication;
     protected string $email;
@@ -22,10 +19,10 @@ class AuthPresenter extends Presenter
         $this->authentication = $authentication;
     }
 
-    public function request(Request $request)
+    public function request($request)
     {
         $requestData = $request->all(['email', 'password']);
-        
+
         try {
             $this->validateFields($requestData);
             $response = $this->auth();
@@ -40,7 +37,7 @@ class AuthPresenter extends Presenter
         try {
             $account = $this->authentication->auth(new AuthenticationParams(email: $this->email, secret: $this->password));
             return $account->toArray();
-        }catch(DomainError $e){
+        } catch (DomainError $e) {
             throw $e;
         }
     }

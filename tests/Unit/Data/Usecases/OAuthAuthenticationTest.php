@@ -5,26 +5,24 @@ namespace Tests\Unit\Data\Usecases;
 use Tests\TestCase;
 use Exception;
 use PHPUnit\Framework\MockObject\MockObject;
-
 use App\Lib\Data\OAuth\OAuthClient;
 use App\Lib\Data\OAuth\OAuthError;
 use App\Lib\Data\OAuth\OAuthErrorCase;
 use App\Lib\Data\Usecases\OAuthAuthentication;
-
 use App\Lib\Domain\Helpers\DomainError;
 use App\Lib\Domain\Usecases\Authentication\{AuthenticationParams};
 
 class OAuthClientSpy implements OAuthClient
-{	
+{
     /**
-	 * Authenticate client
-     * 
-	 * @param string $email
-	 * @param string $secret
-	 *
-	 * @return mixed
-	 */
-	public function authenticate(string $email, string $secret): array 
+     * Authenticate client
+     *
+     * @param string $email
+     * @param string $secret
+     *
+     * @return mixed
+     */
+    public function authenticate(string $email, string $secret): array
     {
         return [];
     }
@@ -76,7 +74,7 @@ class OAuthAuthenticationTest extends TestCase
 
     /**
      * Should call OAuthClient with correct credentials format.
-     * 
+     *
      * @return void
      */
     public function test_should_call_oauthclient_with_correct_credentials()
@@ -88,13 +86,13 @@ class OAuthAuthenticationTest extends TestCase
 
     /**
      * Should throw BadRequest if OAuthClient returns Invalid Data.
-     * 
+     *
      * @return void
      */
     public function test_should_throw_bad_request_if_o_auth_client_returns_invalid_data()
     {
         $this->errorCase(new OAuthError(OAuthErrorCase::InvalidData));
-        
+
         $this->expectException(DomainError::class);
 
         $this->sut->auth($this->params);
@@ -102,7 +100,7 @@ class OAuthAuthenticationTest extends TestCase
 
     /**
      * Should throw InternalError if OAuthClient returns Unexpected Exception.
-     * 
+     *
      * @return void
      */
     public function test_should_throw_internal_error_if_o_auth_client_returns_unexpected_exception()
@@ -116,7 +114,7 @@ class OAuthAuthenticationTest extends TestCase
 
     /**
      * Should throw Unauthorized if OAuthClient returns Invalid Credentials.
-     * 
+     *
      * @return void
      */
     public function test_should_throw_unauthorized_if_o_auth_client_returns_invalid_credentials()
@@ -130,7 +128,7 @@ class OAuthAuthenticationTest extends TestCase
 
     /**
      * Should return AccountEntity if OAuth login success.
-     * 
+     *
      * @return void
      */
     public function test_should_return_account_entity_if_o_auth_login_success()
@@ -143,7 +141,7 @@ class OAuthAuthenticationTest extends TestCase
 
     /**
      * Should throw InternalError if OAuthClient returns success but invalid response
-     * 
+     *
      * @return void
      */
     public function test_should_throw_internal_error_if_o_auth_client_returns_success_but_invalid_response()
