@@ -19,6 +19,7 @@ class OAuthAdapter implements OAuthClient
     public function authenticate(string $email, string $secret): array
     {
         $user = $this->user->where(['email' => $email])->first();
+
         if ($user != null && password_verify($secret, $user->password)) {
             return ['name' => $user->name, 'token' => $user->createToken("token-name", ["send-sms"])->plainTextToken];
         }
