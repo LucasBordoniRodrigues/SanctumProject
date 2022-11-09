@@ -1,6 +1,6 @@
 Feature: Login
 Eu como o sistema
-Devo receber credenciais e gerar um TOKEN para utilizá-lo na autenticação das funcionalidades
+Devo receber credenciais e gerar um TOKEN que será utilizado na autenticação das funcionalidades
 
 Cenário: Credenciais Válidas
 Dado que foram recebidas credenciais válidas

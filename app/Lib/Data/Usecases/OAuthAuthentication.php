@@ -3,11 +3,9 @@
 namespace App\Lib\Data\Usecases;
 
 use Throwable;
-
 use App\Lib\Data\Models\OAuthAccountModel;
 use App\Lib\Data\OAuth\OAuthClient;
 use App\Lib\Data\OAuth\OAuthError;
-
 use App\Lib\Domain\Entities\AccountEntity;
 use App\Lib\Domain\Helpers\DomainError;
 use App\Lib\Domain\Helpers\DomainErrorCase;
@@ -23,25 +21,25 @@ class OAuthAuthentication implements Authentication
         $this->oAuthClient = $oAuthClient;
     }
 
-    public function auth(AuthenticationParams $params) : AccountEntity
+    public function auth(AuthenticationParams $params): AccountEntity
     {
         try {
             $credentials = new OAuthAuthenticationParams();
             $credentials->fromDomain($params);
             $auth = $this->oAuthClient->authenticate($credentials->email, $credentials->password);
-            
+
             return (new OAuthAccountModel(name: $auth['name'], token: $auth['token']))->toEntity();
         } catch (OAuthError $exception) {
-            if ($exception->getCode() == 400){
+            if ($exception->getCode() == 400) {
                 throw new DomainError(DomainErrorCase::BadRequest);
             }
 
-            if ($exception->getCode() == 401){
+            if ($exception->getCode() == 401) {
                 throw new DomainError(DomainErrorCase::Unauthorized);
             }
 
             throw new DomainError(DomainErrorCase::Unexpected);
-        } catch(Throwable $exception) {
+        } catch (Throwable $exception) {
             throw new DomainError(DomainErrorCase::Unexpected);
         }
     }

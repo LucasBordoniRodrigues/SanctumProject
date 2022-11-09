@@ -14,4 +14,4 @@ Route::post("/auth", [AuthApiFactory::class, 'makeLaravelApi']);
  */
 Route::get("/check-auth", function () {
     return response()->json(['auth' => true]);
-})->middleware(['auth:sanctum', 'abilities:send-sms']);
+})->middleware(['auth:sanctum', 'abilities:send-email']);
